@@ -1,0 +1,71 @@
+services:
+  firefly-postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: firefly-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./vol/firefly-postgres:/var/lib/postgresql/data
+    networks:
+      - firefly-private
+
+  firefly-app:
+    image: fireflyiii/core:${FIREFLY_VERSION}
+    container_name: firefly-app
+    restart: unless-stopped
+    environment:
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${FIREFLY_URL}
+      DB_CONNECTION: pgsql
+      DB_HOST: firefly-postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      MAIL_MAILER: smtp
+      MAIL_HOST: firefly-socat-socks5h-smtp
+      MAIL_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
+      MAIL_USERNAME: ${FIREFLY_SMTP_USER}
+      MAIL_PASSWORD: ${FIREFLY_SMTP_PASS}
+      MAIL_ENCRYPTION: tls
+      MAIL_FROM_ADDRESS: ${FIREFLY_SMTP_FROM}
+      MAIL_FROM_NAME: ${FIREFLY_SMTP_FROM_NAME}
+    volumes:
+      - ./vol/firefly-app:/var/www/html/storage/upload
+    depends_on:
+      - firefly-postgres
+      - firefly-socat-smtp
+    networks:
+      - caddy-firefly
+      - firefly-private
+
+  firefly-socat-smtp:
+    image: ghcr.io/ldev1281/docker-socat-socks5h:latest
+    container_name: firefly-socat-socks5h-smtp
+    restart: unless-stopped
+    environment:
+      LISTEN_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
+      TARGET_HOST: ${FIREFLY_SOCAT_SMTP_HOST}
+      TARGET_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
+      SOCKS5H_HOST: ${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}
+      SOCKS5H_PORT: ${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}
+    networks:
+      - firefly-universe
+      - firefly-private
+
+networks:
+  caddy-firefly:
+    name: caddy-firefly
+    external: true
+
+  firefly-universe:
+    name: firefly-universe
+    driver: bridge
+
+  firefly-private:
+    name: firefly-private
+    driver: bridge
+    internal: true

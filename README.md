@@ -23,7 +23,7 @@ Automated installer for Firefly III on a Debian server. Deploys everything under
 /docker/firefly
 ├── docker-compose.yml
 ├── .env                # Auto-generated during install
-├── init.bash  # Main installer script
+├── init.bash           # Main installer script
 └── vol/                # Container data
 ```
 
@@ -48,7 +48,7 @@ docker network create --driver bridge caddy-firefly
 4. Start the installer:
 
 ```bash
-bash install-firefly.sh
+bash ./tools/init.bash
 ```
 
 > The script will prompt you for required values (domain, database password, admin email, etc.), and automatically generate the `.env` file.
@@ -77,4 +77,3 @@ Pull requests are welcome. Please review the `CONTRIBUTING.md` guide before subm
 ## 📄 License
 
 MIT License.
-

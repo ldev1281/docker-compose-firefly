@@ -23,7 +23,7 @@ Automated installer for Firefly III on a Debian server. Deploys everything under
 /docker/firefly
 ├── docker-compose.yml
 ├── .env                # Auto-generated during install
-├── install-firefly.sh  # Main installer script
+├── init.bash  # Main installer script
 └── vol/                # Container data
 ```
 

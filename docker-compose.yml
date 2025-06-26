@@ -19,6 +19,8 @@ services:
     environment:
       APP_KEY: ${FIREFLY_APP_KEY}
       APP_URL: https://${FIREFLY_APP_HOSTNAME}
+      APP_FORCE_SSL: true
+      TRUSTED_PROXIES: "*"
       DB_CONNECTION: pgsql
       DB_HOST: firefly-postgres
       DB_PORT: 5432

@@ -14,7 +14,7 @@ FIREFLY_VERSION=version-6.2.18
 # Generate secure random defaults
 generate_defaults() {
     FIREFLY_POSTGRES_PASSWORD=$(openssl rand -hex 32)
-    FIREFLY_APP_KEY=$(openssl rand -base64 32)
+    FIREFLY_APP_KEY="base64:$(openssl rand -base64 32)"
 }
 
 # Load existing configuration from .env file
@@ -62,7 +62,7 @@ prompt_for_configuration() {
     FIREFLY_SMTP_FROM=${input:-${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}}
 
     read -p "FIREFLY_SMTP_FROM_NAME [${FIREFLY_SMTP_FROM_NAME:-Firefly}]: " input
-    FIREFLY_SMTP_FROM_NAME=${input:-${FIREFLY_SMTP_FROM_NAME:-Firefly}}    
+    FIREFLY_SMTP_FROM_NAME=${input:-${FIREFLY_SMTP_FROM_NAME:-Firefly}}
 
     read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_HOST [${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}]: " input
     FIREFLY_SOCAT_SMTP_SOCKS5H_HOST=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}}
@@ -83,7 +83,7 @@ confirm_and_save_configuration() {
         ""
         "# Firefly"
         "FIREFLY_VERSION=${FIREFLY_VERSION}"
-        "FIREFLY_APP_KEY=base64:${FIREFLY_APP_KEY}"
+        "FIREFLY_APP_KEY=${FIREFLY_APP_KEY}"
         "FIREFLY_APP_HOSTNAME=${FIREFLY_APP_HOSTNAME}"
         ""
         "# SMTP Firefly"

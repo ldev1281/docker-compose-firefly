@@ -136,7 +136,7 @@ setup_containers() {
     echo "Waiting 60 seconds for services to initialize..."
     sleep 60
 
-    echo "Done! Firefly III should be available at: $FIREFLY_URL"
+    echo "Done! Firefly III should be available at: $FIREFLY_APP_HOSTNAME"
     echo ""
 }
 

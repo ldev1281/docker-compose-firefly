@@ -6,13 +6,15 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/../.env"
 
-POSTGRES_VERSION=15
+VOL_DIR="${SCRIPT_DIR}/vol"
+
+FIREFLY_POSTGRES_VERSION=15
 FIREFLY_VERSION=version-6.2.18
 
 # Generate secure random defaults
 generate_defaults() {
-    POSTGRES_PASSWORD=$(openssl rand -hex 32)
-    APP_KEY=$(openssl rand -base64 32)
+    FIREFLY_POSTGRES_PASSWORD=$(openssl rand -hex 32)
+    FIREFLY_APP_KEY=$(openssl rand -base64 32)
 }
 
 # Load existing configuration from .env file
@@ -29,32 +31,26 @@ prompt_for_configuration() {
 
     echo "PostgreSQL settings:"
 
-    read -p "POSTGRES_USER [${POSTGRES_USER:-firefly}]: " input
-    POSTGRES_USER=${input:-${POSTGRES_USER:-firefly}}
+    read -p "FIREFLY_POSTGRES_USER [${FIREFLY_POSTGRES_USER:-firefly}]: " input
+    FIREFLY_POSTGRES_USER=${input:-${FIREFLY_POSTGRES_USER:-firefly}}
 
-    read -p "POSTGRES_PASSWORD [${POSTGRES_PASSWORD:-password}]: " input
-    POSTGRES_PASSWORD=${input:-${POSTGRES_PASSWORD:-password}}
+    read -p "FIREFLY_POSTGRES_PASSWORD [${FIREFLY_POSTGRES_PASSWORD:-password}]: " input
+    FIREFLY_POSTGRES_PASSWORD=${input:-${FIREFLY_POSTGRES_PASSWORD:-password}}
 
-    read -p "POSTGRES_DB [${POSTGRES_DB:-firefly}]: " input
-    POSTGRES_DB=${input:-${POSTGRES_DB:-firefly}}
+    read -p "FIREFLY_POSTGRES_DB [${FIREFLY_POSTGRES_DB:-firefly}]: " input
+    FIREFLY_POSTGRES_DB=${input:-${FIREFLY_POSTGRES_DB:-firefly}}
 
     echo ""
     echo "Firefly III settings:"
 
-    read -p "FIREFLY_URL [${FIREFLY_URL:-http://example.com}]: " input
-    FIREFLY_URL=${input:-${FIREFLY_URL:-http://example.com}}
+    read -p "FIREFLY_APP_URL [${FIREFLY_APP_URL:-http://example.com}]: " input
+    FIREFLY_APP_URL=${input:-${FIREFLY_APP_URL:-http://example.com}}
 
     read -p "FIREFLY_SOCAT_SMTP_PORT [${FIREFLY_SOCAT_SMTP_PORT:-587}]: " input
     FIREFLY_SOCAT_SMTP_PORT=${input:-${FIREFLY_SOCAT_SMTP_PORT:-587}}
 
     read -p "FIREFLY_SOCAT_SMTP_HOST [${FIREFLY_SOCAT_SMTP_HOST:-smtp.mailgun.org}]: " input
     FIREFLY_SOCAT_SMTP_HOST=${input:-${FIREFLY_SOCAT_SMTP_HOST:-smtp.mailgun.org}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_HOST [${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_HOST=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_PORT [${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_PORT=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}}
 
     read -p "FIREFLY_SMTP_USER [${FIREFLY_SMTP_USER:-postmaster@sandbox123.mailgun.org}]: " input
     FIREFLY_SMTP_USER=${input:-${FIREFLY_SMTP_USER:-postmaster@sandbox123.mailgun.org}}
@@ -66,22 +62,29 @@ prompt_for_configuration() {
     FIREFLY_SMTP_FROM=${input:-${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}}
 
     read -p "FIREFLY_SMTP_FROM_NAME [${FIREFLY_SMTP_FROM_NAME:-Firefly}]: " input
-    FIREFLY_SMTP_FROM_NAME=${input:-${FIREFLY_SMTP_FROM_NAME:-Firefly}}
+    FIREFLY_SMTP_FROM_NAME=${input:-${FIREFLY_SMTP_FROM_NAME:-Firefly}}    
+
+    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_HOST [${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}]: " input
+    FIREFLY_SOCAT_SMTP_SOCKS5H_HOST=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}}
+
+    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_PORT [${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}]: " input
+    FIREFLY_SOCAT_SMTP_SOCKS5H_PORT=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}}
+
+
 }
 # Display configuration and ask user to confirm
 confirm_and_save_configuration() {
     CONFIG_LINES=(
         "# PostgreSQL"
-        "POSTGRES_VERSION=${POSTGRES_VERSION}"
-        "POSTGRES_USER=${POSTGRES_USER}"
-        "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
-        "POSTGRES_DB=${POSTGRES_DB}"
+        "FIREFLY_POSTGRES_VERSION=${FIREFLY_POSTGRES_VERSION}"
+        "FIREFLY_POSTGRES_USER=${FIREFLY_POSTGRES_USER}"
+        "FIREFLY_POSTGRES_PASSWORD=${FIREFLY_POSTGRES_PASSWORD}"
+        "FIREFLY_POSTGRES_DB=${FIREFLY_POSTGRES_DB}"
         ""
         "# Firefly"
         "FIREFLY_VERSION=${FIREFLY_VERSION}"
-        "FIREFLY_URL=${FIREFLY_URL}"
-        "APP_KEY=base64:${APP_KEY}"
-        "APP_URL=${FIREFLY_URL}"
+        "FIREFLY_APP_KEY=base64:${FIREFLY_APP_KEY}"
+        "FIREFLY_APP_URL=${FIREFLY_APP_URL}"
         ""
         "# SMTP Firefly"
         "FIREFLY_SMTP_USER=${FIREFLY_SMTP_USER}"

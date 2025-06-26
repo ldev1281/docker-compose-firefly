@@ -43,8 +43,8 @@ prompt_for_configuration() {
     echo ""
     echo "Firefly III settings:"
 
-    read -p "FIREFLY_APP_HOSTNAME [${FIREFLY_APP_HOSTNAME:-http://example.com}]: " input
-    FIREFLY_APP_HOSTNAME=${input:-${FIREFLY_APP_HOSTNAME:-http://example.com}}
+    read -p "FIREFLY_APP_HOSTNAME [${FIREFLY_APP_HOSTNAME:-firefly.example.com}]: " input
+    FIREFLY_APP_HOSTNAME=${input:-${FIREFLY_APP_HOSTNAME:-firefly.example.com}}
 
     read -p "FIREFLY_SOCAT_SMTP_PORT [${FIREFLY_SOCAT_SMTP_PORT:-587}]: " input
     FIREFLY_SOCAT_SMTP_PORT=${input:-${FIREFLY_SOCAT_SMTP_PORT:-587}}

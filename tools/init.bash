@@ -43,8 +43,8 @@ prompt_for_configuration() {
     echo ""
     echo "Firefly III settings:"
 
-    read -p "FIREFLY_APP_URL [${FIREFLY_APP_URL:-http://example.com}]: " input
-    FIREFLY_APP_URL=${input:-${FIREFLY_APP_URL:-http://example.com}}
+    read -p "FIREFLY_APP_HOSTNAME [${FIREFLY_APP_HOSTNAME:-http://example.com}]: " input
+    FIREFLY_APP_HOSTNAME=${input:-${FIREFLY_APP_HOSTNAME:-http://example.com}}
 
     read -p "FIREFLY_SOCAT_SMTP_PORT [${FIREFLY_SOCAT_SMTP_PORT:-587}]: " input
     FIREFLY_SOCAT_SMTP_PORT=${input:-${FIREFLY_SOCAT_SMTP_PORT:-587}}
@@ -84,7 +84,7 @@ confirm_and_save_configuration() {
         "# Firefly"
         "FIREFLY_VERSION=${FIREFLY_VERSION}"
         "FIREFLY_APP_KEY=base64:${FIREFLY_APP_KEY}"
-        "FIREFLY_APP_URL=${FIREFLY_APP_URL}"
+        "FIREFLY_APP_HOSTNAME=${FIREFLY_APP_HOSTNAME}"
         ""
         "# SMTP Firefly"
         "FIREFLY_SMTP_USER=${FIREFLY_SMTP_USER}"

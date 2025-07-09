@@ -105,6 +105,24 @@ Firefly III stores important runtime data, uploaded files, and PostgreSQL databa
 ```
 
 
+## Creating a Backup Task for Firefly
+
+To create a backup task for your Firefly deployment using [`backup-tool`](https://github.com/jordimock/backup-tool), add a new task file to `/etc/limbo-backup/rsync.conf.d/`:
+
+```bash
+sudo nano /etc/limbo-backup/rsync.conf.d/10-firefly.conf.bash
+```
+
+Paste the following contents:
+
+```bash
+CMD_BEFORE_BACKUP="docker compose --project-directory /docker/firefly down"
+CMD_AFTER_BACKUP="docker compose --project-directory /docker/firefly up -d"
+
+INCLUDE_PATHS=(
+  "/docker/firefly/.env"
+  "/docker/firefly/vol"
+)
 
 ## License
 

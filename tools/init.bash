@@ -6,7 +6,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/../.env"
 
-VOL_DIR=${SCRIPT_DIR}/../vol/"
+VOL_DIR="${SCRIPT_DIR}/../vol/"
 
 FIREFLY_POSTGRES_VERSION=15
 FIREFLY_VERSION=version-6.2.18

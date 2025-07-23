@@ -22,7 +22,7 @@ This project is designed to work with the reverse proxy configuration provided b
 1. **Create the shared Docker network** (if it doesn't already exist):
 
    ```bash
-   docker network create --driver bridge caddy-firefly
+ docker network create --driver bridge proxy-client-firefly
    ```
 2. **Set up the Caddy reverse proxy** by following the instructions in the [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy). repository.
    Once Caddy is installed, it will automatically detect the Firefly III container via the caddy-firefly network and route traffic accordingly.
@@ -31,25 +31,20 @@ This project is designed to work with the reverse proxy configuration provided b
 
 Configuration Variables:
 
-| Variable Name                          | Description                                                    | Default Value                            |
-|----------------------------------------|----------------------------------------------------------------|------------------------------------------|
-| FIREFLY_APP_HOSTNAME                   | Public domain name for Firefly III                             | firefly.example.com                      |
-| FIREFLY_VERSION                        | Docker image tag for Firefly III                               | version-6.2.18                           |
-| FIREFLY_POSTGRES_VERSION               | Docker image tag for PostgreSQL                                | 15                                       |
-| FIREFLY_POSTGRES_USER                  | PostgreSQL username                                            | firefly                                  |
-| FIREFLY_POSTGRES_PASSWORD              | PostgreSQL password                                            | (auto-generated or input manually)       |
-| FIREFLY_POSTGRES_DB                    | PostgreSQL database name                                       | firefly                                  |
-| FIREFLY_APP_KEY                        | Laravel application secret key                                 | (auto-generated)                         |
-| FIREFLY_SMTP_USER                      | SMTP username for sending email notifications                  | postmaster@sandbox123.mailgun.org        |
-| FIREFLY_SMTP_PASS                      | SMTP password                                                  | password                                 |
-| FIREFLY_SMTP_FROM                      | SMTP sender address                                            | firefly@sandbox123.mailgun.org           |
-| FIREFLY_SMTP_FROM_NAME                 | SMTP sender name                                               | Firefly                                  |
-| FIREFLY_SOCAT_SMTP_HOST                | Target SMTP host (for socat container)                         | smtp.mailgun.org                         |
-| FIREFLY_SOCAT_SMTP_PORT                | SMTP target and proxy listen port                              | 587                                      |
-| FIREFLY_SOCAT_SMTP_SOCKS5H_HOST        | SOCKS5h proxy host (optional)                                  | (empty)                                  |
-| FIREFLY_SOCAT_SMTP_SOCKS5H_PORT        | SOCKS5h proxy port (optional)                                  | (empty)                                  |
-| FIREFLY_SOCAT_SMTP_SOCKS5H_USER        | SOCKS5h proxy username (optional)                              | (empty)                                  |
-| FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD    | SOCKS5h proxy password (optional)                              | (empty)                                  |
+| Variable                        | Description                                | Example / Default                          |
+|---------------------------------|--------------------------------------------|--------------------------------------------|
+| `FIREFLY_APP_HOSTNAME`          | Public domain for Firefly III              | `firefly.example.com`                      |
+| `FIREFLY_VERSION`               | Firefly Docker image tag                   | `version-6.2.18`                            |
+| `FIREFLY_POSTGRES_VERSION`      | PostgreSQL image version                   | `15`                                        |
+| `FIREFLY_POSTGRES_USER`         | PostgreSQL username                        | `firefly`                                   |
+| `FIREFLY_POSTGRES_PASSWORD`     | PostgreSQL password                        | *(generated or input)*                      |
+| `FIREFLY_POSTGRES_DB`           | Database name                              | `firefly`                                   |
+| `FIREFLY_APP_KEY`               | Laravel app key                            | *(generated)*                               |
+| `FIREFLY_SMTP_HOST`             | SMTP host                                  | `smtp.mailgun.org`                          |
+| `FIREFLY_SMTP_PORT`             | SMTP port                                  | `587`                                       |
+| `FIREFLY_SMTP_USER`             | SMTP username                              | `postmaster@sandbox123.mailgun.org`         |
+| `FIREFLY_SMTP_PASS`             | SMTP password                              | `password`                                   |
+| `FIREFLY_SMTP_FROM`             | Sender email address                       | `firefly@sandbox123.mailgun.org`            |
 
 To configure and launch all required services, run the provided script:
 

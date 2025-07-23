@@ -22,7 +22,7 @@ This project is designed to work with the reverse proxy configuration provided b
 1. **Create the shared Docker network** (if it doesn't already exist):
 
    ```bash
- docker network create --driver bridge proxy-client-firefly
+   docker network create --driver bridge proxy-client-firefly
    ```
 2. **Set up the Caddy reverse proxy** by following the instructions in the [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy). repository.
    Once Caddy is installed, it will automatically detect the Firefly III container via the caddy-firefly network and route traffic accordingly.
@@ -122,4 +122,3 @@ INCLUDE_PATHS=(
 ## License
 
 Licensed under the Prostokvashino License. See [LICENSE](LICENSE) for details.
-

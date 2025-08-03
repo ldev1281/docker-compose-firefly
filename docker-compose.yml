@@ -28,46 +28,25 @@ services:
       DB_USERNAME: ${FIREFLY_POSTGRES_USER}
       DB_PASSWORD: ${FIREFLY_POSTGRES_PASSWORD}
       MAIL_MAILER: smtp
-      MAIL_HOST: firefly-socat-socks5h-smtp
-      MAIL_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
+      MAIL_HOST:  ${FIREFLY_SMTP_HOST}
+      MAIL_PORT: ${FIREFLY_SMTP_PORT}
       MAIL_USERNAME: ${FIREFLY_SMTP_USER}
       MAIL_PASSWORD: ${FIREFLY_SMTP_PASS}
       MAIL_ENCRYPTION: tls
-      MAIL_FROM_ADDRESS: ${FIREFLY_SMTP_FROM}
-      MAIL_FROM_NAME: ${FIREFLY_SMTP_FROM_NAME}
+      MAIL_FROM: ${FIREFLY_SMTP_FROM}
+      SITE_OWNER: ${FIREFLY_SMTP_FROM}
     volumes:
       - ./vol/firefly-app:/var/www/html/storage/upload
     depends_on:
       - firefly-postgres
-      - firefly-socat-smtp
     networks:
-      - caddy-firefly
-      - firefly-private
-
-  firefly-socat-smtp:
-    image: ghcr.io/ldev1281/docker-socat-socks5h:latest
-    container_name: firefly-socat-socks5h-smtp
-    restart: unless-stopped
-    environment:
-      LISTEN_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
-      TARGET_HOST: ${FIREFLY_SOCAT_SMTP_HOST}
-      TARGET_PORT: ${FIREFLY_SOCAT_SMTP_PORT}
-      SOCKS5H_HOST: ${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}
-      SOCKS5H_PORT: ${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}
-      SOCKS5H_USER: ${FIREFLY_SOCAT_SMTP_SOCKS5H_USER:-}
-      SOCKS5H_PASSWORD: ${FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD:-}
-    networks:
-      - firefly-universe
+      - proxy-client-firefly
       - firefly-private
 
 networks:
-  caddy-firefly:
-    name: caddy-firefly
+  proxy-client-firefly:
+    name: proxy-client-firefly
     external: true
-
-  firefly-universe:
-    name: firefly-universe
-    driver: bridge
 
   firefly-private:
     name: firefly-private

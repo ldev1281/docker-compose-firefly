@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # -------------------------------------
 # Firefly III setup script
 # -------------------------------------
@@ -5,7 +8,6 @@
 # Get the absolute path of script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/../.env"
-
 VOL_DIR="${SCRIPT_DIR}/../vol/"
 
 FIREFLY_POSTGRES_VERSION=15
@@ -42,15 +44,16 @@ prompt_for_configuration() {
 
     echo ""
     echo "Firefly III settings:"
-
     read -p "FIREFLY_APP_HOSTNAME [${FIREFLY_APP_HOSTNAME:-firefly.example.com}]: " input
     FIREFLY_APP_HOSTNAME=${input:-${FIREFLY_APP_HOSTNAME:-firefly.example.com}}
 
-    read -p "FIREFLY_SOCAT_SMTP_PORT [${FIREFLY_SOCAT_SMTP_PORT:-587}]: " input
-    FIREFLY_SOCAT_SMTP_PORT=${input:-${FIREFLY_SOCAT_SMTP_PORT:-587}}
+    echo ""
+    echo "SMTP settings:"
+    read -p "FIREFLY_SMTP_HOST [${FIREFLY_SMTP_HOST:-smtp.mailgun.org}]: " input
+    FIREFLY_SMTP_HOST=${input:-${FIREFLY_SMTP_HOST:-smtp.mailgun.org}}
 
-    read -p "FIREFLY_SOCAT_SMTP_HOST [${FIREFLY_SOCAT_SMTP_HOST:-smtp.mailgun.org}]: " input
-    FIREFLY_SOCAT_SMTP_HOST=${input:-${FIREFLY_SOCAT_SMTP_HOST:-smtp.mailgun.org}}
+    read -p "FIREFLY_SMTP_PORT [${FIREFLY_SMTP_PORT:-587}]: " input
+    FIREFLY_SMTP_PORT=${input:-${FIREFLY_SMTP_PORT:-587}}
 
     read -p "FIREFLY_SMTP_USER [${FIREFLY_SMTP_USER:-postmaster@sandbox123.mailgun.org}]: " input
     FIREFLY_SMTP_USER=${input:-${FIREFLY_SMTP_USER:-postmaster@sandbox123.mailgun.org}}
@@ -60,23 +63,8 @@ prompt_for_configuration() {
 
     read -p "FIREFLY_SMTP_FROM [${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}]: " input
     FIREFLY_SMTP_FROM=${input:-${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}}
-
-    read -p "FIREFLY_SMTP_FROM_NAME [${FIREFLY_SMTP_FROM_NAME:-Firefly}]: " input
-    FIREFLY_SMTP_FROM_NAME=${input:-${FIREFLY_SMTP_FROM_NAME:-Firefly}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_HOST [${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_HOST=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST:-}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_PORT [${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_PORT=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT:-}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_USER [${FIREFLY_SOCAT_SMTP_SOCKS5H_USER:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_USER=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_USER:-}}
-
-    read -p "FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD [${FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD:-}]: " input
-    FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD=${input:-${FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD:-}}
 }
-# Display configuration and ask user to confirm
+
 confirm_and_save_configuration() {
     CONFIG_LINES=(
         "# PostgreSQL"
@@ -90,19 +78,12 @@ confirm_and_save_configuration() {
         "FIREFLY_APP_KEY=${FIREFLY_APP_KEY}"
         "FIREFLY_APP_HOSTNAME=${FIREFLY_APP_HOSTNAME}"
         ""
-        "# SMTP Firefly"
+        "# SMTP"
+        "FIREFLY_SMTP_HOST=${FIREFLY_SMTP_HOST}"
+        "FIREFLY_SMTP_PORT=${FIREFLY_SMTP_PORT}"
         "FIREFLY_SMTP_USER=${FIREFLY_SMTP_USER}"
         "FIREFLY_SMTP_PASS=${FIREFLY_SMTP_PASS}"
         "FIREFLY_SMTP_FROM=${FIREFLY_SMTP_FROM}"
-        "FIREFLY_SMTP_FROM_NAME=${FIREFLY_SMTP_FROM_NAME}"
-        ""
-        "# SMTP socat proxy settings"
-        "FIREFLY_SOCAT_SMTP_PORT=${FIREFLY_SOCAT_SMTP_PORT}"
-        "FIREFLY_SOCAT_SMTP_HOST=${FIREFLY_SOCAT_SMTP_HOST}"
-        "FIREFLY_SOCAT_SMTP_SOCKS5H_HOST=${FIREFLY_SOCAT_SMTP_SOCKS5H_HOST}"
-        "FIREFLY_SOCAT_SMTP_SOCKS5H_PORT=${FIREFLY_SOCAT_SMTP_SOCKS5H_PORT}"
-        "FIREFLY_SOCAT_SMTP_SOCKS5H_USER=${FIREFLY_SOCAT_SMTP_SOCKS5H_USER}"
-        "FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD=${FIREFLY_SOCAT_SMTP_SOCKS5H_PASSWORD}"
     )
 
     echo ""
@@ -142,13 +123,13 @@ setup_containers() {
     echo "Waiting 60 seconds for services to initialize..."
     sleep 60
 
-    echo "Done! Firefly III should be available at: $FIREFLY_APP_HOSTNAME"
+    echo "Done! Firefly III should be available at: https://${FIREFLY_APP_HOSTNAME}"
     echo ""
 }
 
-# -----------------------------------
-# Main logic
-# -----------------------------------
+# -------------------
+# Main
+# -------------------
 
 if [ -f "$ENV_FILE" ]; then
     echo ".env file found. Loading existing configuration."

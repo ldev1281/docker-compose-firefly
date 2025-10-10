@@ -31,20 +31,20 @@ This project is designed to work with the reverse proxy configuration provided b
 
 Configuration Variables:
 
-| Variable                        | Description                                | Example / Default                          |
-|---------------------------------|--------------------------------------------|--------------------------------------------|
-| `FIREFLY_APP_HOSTNAME`          | Public domain for Firefly III              | `firefly.example.com`                      |
-| `FIREFLY_VERSION`               | Firefly Docker image tag                   | `version-6.2.18`                            |
-| `FIREFLY_POSTGRES_VERSION`      | PostgreSQL image version                   | `15`                                        |
-| `FIREFLY_POSTGRES_USER`         | PostgreSQL username                        | `firefly`                                   |
-| `FIREFLY_POSTGRES_PASSWORD`     | PostgreSQL password                        | *(generated or input)*                      |
-| `FIREFLY_POSTGRES_DB`           | Database name                              | `firefly`                                   |
-| `FIREFLY_APP_KEY`               | Laravel app key                            | *(generated)*                               |
-| `FIREFLY_SMTP_HOST`             | SMTP host                                  | `smtp.mailgun.org`                          |
-| `FIREFLY_SMTP_PORT`             | SMTP port                                  | `587`                                       |
-| `FIREFLY_SMTP_USER`             | SMTP username                              | `postmaster@sandbox123.mailgun.org`         |
-| `FIREFLY_SMTP_PASS`             | SMTP password                              | `password`                                   |
-| `FIREFLY_SMTP_FROM`             | Sender email address                       | `firefly@sandbox123.mailgun.org`            |
+| Variable                         | Description                                | Example / Default                          |
+|----------------------------------|--------------------------------------------|--------------------------------------------|
+| `FIREFLY_APP_HOSTNAME`           | Public domain for Firefly III              | `firefly.example.com`                      |
+| `FIREFLY_VERSION`                | Firefly Docker image tag                   | `version-6.2.18`                           |
+| `FIREFLY_POSTGRES_VERSION`       | PostgreSQL image version                   | `15`                                       |
+| `FIREFLY_POSTGRES_USER`          | PostgreSQL username                        | `firefly`                                  |
+| `FIREFLY_POSTGRES_PASSWORD`      | PostgreSQL password                        | *(generated or input)*                     |
+| `FIREFLY_POSTGRES_DB`            | Database name                              | `firefly`                                  |
+| `FIREFLY_APP_KEY`                | Laravel app key                            | *(generated)*                              |
+| `FIREFLY_SMTP_HOST`              | SMTP host                                  | `smtp.mailgun.org`                         |
+| `FIREFLY_SMTP_PORT`              | SMTP port                                  | `587`                                      |
+| `FIREFLY_SMTP_USER`              | SMTP username                              | `postmaster@sandbox123.mailgun.org`        |
+| `FIREFLY_SMTP_PASS`              | SMTP password                              | `password`                                 |
+| `FIREFLY_SMTP_FROM`              | Sender email address                       | `firefly@sandbox123.mailgun.org`           |
 
 To configure and launch all required services, run the provided script:
 
@@ -114,9 +114,14 @@ Paste the following contents:
 CMD_BEFORE_BACKUP="docker compose --project-directory /docker/firefly down"
 CMD_AFTER_BACKUP="docker compose --project-directory /docker/firefly up -d"
 
+CMD_BEFORE_RESTORE="docker compose --project-directory /docker/firefly down || true"
+CMD_AFTER_RESTORE=(
+"docker network create --driver bridge proxy-client-firefly || true"
+"docker compose --project-directory /docker/firefly up -d"
+)
+
 INCLUDE_PATHS=(
-  "/docker/firefly/.env"
-  "/docker/firefly/vol"
+  "/docker/firefly"
 )
 ```
 ## License

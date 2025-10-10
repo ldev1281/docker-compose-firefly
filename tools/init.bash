@@ -81,8 +81,8 @@ confirm_and_save_configuration() {
         "# SMTP"
         "FIREFLY_SMTP_HOST=${FIREFLY_SMTP_HOST}"
         "FIREFLY_SMTP_PORT=${FIREFLY_SMTP_PORT}"
-        "FIREFLY_SMTP_USER=${FIREFLY_SMTP_USER}"
-        "FIREFLY_SMTP_PASS=${FIREFLY_SMTP_PASS}"
+        "FIREFLY_SMTP_USER='${FIREFLY_SMTP_USER}'"
+        "FIREFLY_SMTP_PASS='${FIREFLY_SMTP_PASS}'"
         "FIREFLY_SMTP_FROM=${FIREFLY_SMTP_FROM}"
     )
 
@@ -114,8 +114,17 @@ setup_containers() {
     echo "Stopping all containers and removing volumes..."
     docker compose down -v || true
 
-    echo "Clearing volume data..."
-    [ -d "${VOL_DIR}" ] && rm -rf "${VOL_DIR}"/*
+    if [ -d "$VOL_DIR" ]; then
+        echo "The 'vol' directory exists:"
+        echo " - In case of a new install type 'y' to clear its contents. WARNING! This will remove all previous configuration files and stored data."
+        echo " - In case of an upgrade/installing a new application type 'n' (or press Enter)."
+        read -p "Clear it now? (y/N): " CONFIRM
+        echo ""
+        if [[ "$CONFIRM" == "y" ]]; then
+            echo "Clearing 'vol' directory..."
+            rm -rf "${VOL_DIR:?}"/*
+        fi
+    fi
 
     echo "Starting containers..."
     docker compose up -d

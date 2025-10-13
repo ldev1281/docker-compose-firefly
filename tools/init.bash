@@ -11,7 +11,7 @@ ENV_FILE="${SCRIPT_DIR}/../.env"
 VOL_DIR="${SCRIPT_DIR}/../vol"
 
 FIREFLY_POSTGRES_VERSION=15
-FIREFLY_VERSION=version-6.4.2
+CURRENT_FIREFLY_VERSION=version-6.4.2
 
 # Generate secure random defaults
 generate_defaults() {
@@ -63,6 +63,8 @@ prompt_for_configuration() {
 
     read -p "FIREFLY_SMTP_FROM [${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}]: " input
     FIREFLY_SMTP_FROM=${input:-${FIREFLY_SMTP_FROM:-firefly@sandbox123.mailgun.org}}
+
+    FIREFLY_VERSION=${CURRENT_FIREFLY_VERSION}
 }
 
 confirm_and_save_configuration() {

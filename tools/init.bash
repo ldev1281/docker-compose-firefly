@@ -11,7 +11,7 @@ ENV_FILE="${SCRIPT_DIR}/../.env"
 VOL_DIR="${SCRIPT_DIR}/../vol"
 
 FIREFLY_POSTGRES_VERSION=15
-FIREFLY_VERSION=version-6.2.18
+FIREFLY_VERSION=version-6.4.2
 
 # Generate secure random defaults
 generate_defaults() {

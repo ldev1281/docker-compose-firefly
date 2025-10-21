@@ -22,7 +22,7 @@ This project is designed to work with the reverse proxy configuration provided b
 1. **Create the shared Docker network** (if it doesn't already exist):
 
    ```bash
-   docker network create --driver bridge proxy-client-firefly
+   docker network create --driver bridge --internal proxy-client-firefly
    ```
 2. **Set up the Caddy reverse proxy** by following the instructions in the [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy). repository.
    Once Caddy is installed, it will automatically detect the Firefly III container via the caddy-firefly network and route traffic accordingly.
@@ -116,7 +116,7 @@ CMD_AFTER_BACKUP="docker compose --project-directory /docker/firefly up -d"
 
 CMD_BEFORE_RESTORE="docker compose --project-directory /docker/firefly down || true"
 CMD_AFTER_RESTORE=(
-"docker network create --driver bridge proxy-client-firefly || true"
+"docker network create --driver bridge --internal proxy-client-firefly || true"
 "docker compose --project-directory /docker/firefly up -d"
 )
 

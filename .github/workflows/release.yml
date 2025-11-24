@@ -5,6 +5,12 @@ env:
   ARCHIVE_NAME: ${{ github.event.repository.name }}
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release'
+        required: false
+        default: ''
   pull_request:
     branches:
       - main
@@ -87,8 +93,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.tag }}
+          tag_name: ${{ github.event.inputs.tag || steps.version.outputs.tag }}
+          name: ${{ github.event.inputs.tag || steps.version.outputs.tag }}
           draft: false
           prerelease: false
           fail_on_unmatched_files: true

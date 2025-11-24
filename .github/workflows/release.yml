@@ -71,7 +71,7 @@ jobs:
             exit 1
           fi
 
-          TAG="v$APP_VERSION"
+          TAG="$APP_VERSION"
 
           if git rev-parse "$TAG" >/dev/null 2>&1; then
             echo "Tag $TAG already exists — skipping release."

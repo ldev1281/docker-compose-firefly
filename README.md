@@ -4,17 +4,35 @@ This repository provides a production-ready Docker Compose configuration for dep
 
 ## Setup Instructions
 
-### 1. Clone the Repository
+### 1. Download and Extract the Release
 
-Clone the project to your server in the `/docker/firefly/` directory:
+Download the packaged release to your server into the `/docker/firefly/` directory and extract it there.
+
+Create the target directory and enter it:
 
 ```bash
 mkdir -p /docker/firefly
 cd /docker/firefly
-
-# Clone the main Firefly III project
-git clone https://github.com/ldev1281/docker-compose-firefly.git .
 ```
+
+You can either download the **latest** release:
+
+```bash
+curl -fsSL "https://github.com/ldev1281/docker-compose-firefly/releases/latest/download/docker-compose-firefly.tar.gz" -o /tmp/docker-compose-firefly.tar.gz
+tar xzf /tmp/docker-compose-firefly.tar.gz -C /docker/firefly
+rm -f /tmp/docker-compose-firefly.tar.gz
+```
+
+Or download a **specific** release (for example `version-6.2.18`):
+
+```bash
+curl -fsSL "https://github.com/ldev1281/docker-compose-firefly/releases/download/version-6.2.18/docker-compose-firefly.tar.gz" -o /tmp/docker-compose-firefly.tar.gz
+tar xzf /tmp/docker-compose-firefly.tar.gz -C /docker/firefly
+rm -f /tmp/docker-compose-firefly.tar.gz
+```
+
+After extraction, the contents of the archive should be located directly in `/docker/firefly/` (next to `docker-compose.yml`).
+
 ## 2. Create Docker Network and Set Up Reverse Proxy
 
 This project is designed to work with the reverse proxy configuration provided by [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy). To enable this integration, follow these steps:
@@ -24,6 +42,7 @@ This project is designed to work with the reverse proxy configuration provided b
    ```bash
    docker network create --driver bridge --internal proxy-client-firefly
    ```
+
 2. **Set up the Caddy reverse proxy** by following the instructions in the [`docker-compose-caddy`](https://github.com/ldev1281/docker-compose-caddy). repository.
    Once Caddy is installed, it will automatically detect the Firefly III container via the caddy-firefly network and route traffic accordingly.
 
@@ -48,7 +67,9 @@ Configuration Variables:
 
 To configure and launch all required services, run the provided script:
 
-    ./tools/init.bash
+```bash
+./tools/init.bash
+```
 
 The script will:
 
@@ -60,10 +81,9 @@ The script will:
 **Important:**  
 Make sure to securely store your `.env` file locally for future reference or redeployment.
 
-
 ### 4. Start the Firefly Service
 
-```
+```bash
 docker compose up -d
 ```
 
@@ -71,7 +91,7 @@ This will start Firefly and make your configured domains available.
 
 ### 5. Verify Running Containers
 
-```
+```bash
 docker compose ps
 ```
 
@@ -88,7 +108,7 @@ Firefly III stores important runtime data, uploaded files, and PostgreSQL databa
 
 ### Example Directory Structure
 
-```
+```text
 /docker/firefly/
 ├── docker-compose.yml
 ├── tools/
@@ -98,7 +118,6 @@ Firefly III stores important runtime data, uploaded files, and PostgreSQL databa
 │ └── firefly-postgres/ 
 ├── .env 
 ```
-
 
 ## Creating a Backup Task for Firefly
 
@@ -124,6 +143,7 @@ INCLUDE_PATHS=(
   "/docker/firefly"
 )
 ```
+
 ## License
 
 Licensed under the Prostokvashino License. See [LICENSE](LICENSE) for details.

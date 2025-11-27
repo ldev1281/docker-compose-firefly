@@ -23,10 +23,10 @@ tar xzf /tmp/docker-compose-firefly.tar.gz -C /docker/firefly
 rm -f /tmp/docker-compose-firefly.tar.gz
 ```
 
-Or download a **specific** release (for example `version-6.2.18`):
+Or download a **specific** release (for example `version-6.4.2`):
 
 ```bash
-curl -fsSL "https://github.com/ldev1281/docker-compose-firefly/releases/download/version-6.2.18/docker-compose-firefly.tar.gz" -o /tmp/docker-compose-firefly.tar.gz
+curl -fsSL "https://github.com/ldev1281/docker-compose-firefly/releases/download/version-6.4.2/docker-compose-firefly.tar.gz" -o /tmp/docker-compose-firefly.tar.gz
 tar xzf /tmp/docker-compose-firefly.tar.gz -C /docker/firefly
 rm -f /tmp/docker-compose-firefly.tar.gz
 ```

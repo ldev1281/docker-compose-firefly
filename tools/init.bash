@@ -17,7 +17,7 @@ REQUIRED_NETS="proxy-client-firefly"
 BACKUP_TASKS="10-firefly.conf.bash"
 
 FIREFLY_POSTGRES_VERSION="15"
-CURRENT_FIREFLY_VERSION="version-6.4.2"
+CURRENT_FIREFLY_VERSION="version-6.4.18"
 
 check_requirements() {
     missed_tools=()
